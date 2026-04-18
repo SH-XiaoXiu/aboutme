@@ -12,6 +12,7 @@ export default function About() {
           label="PROLOGUE"
           title="关于我，"
           italicTitle="一些随便写写的片段。"
+          direction="from-bottom"
         />
 
         <div className="space-y-10 md:space-y-20">
@@ -22,7 +23,7 @@ export default function About() {
                 <motion.div
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true, margin: '-100px' }}
+                  viewport={{ once: false, margin: '-100px' }}
                   transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
                   className="mt-12 md:mt-20 w-24 h-px bg-ink-200/20 origin-left"
                 />

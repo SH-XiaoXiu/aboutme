@@ -19,8 +19,8 @@ export default {
           900: '#14130e',
         },
         accent: {
-          DEFAULT: '#a68b5b',
-          light: '#c9a876',
+          DEFAULT: '#7d6540',
+          light: '#a08160',
         },
       },
     },

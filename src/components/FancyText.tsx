@@ -28,9 +28,12 @@ export function DecryptedText({
     if (!el) return;
     const obs = new IntersectionObserver(
       (es) => {
+        // 双向：进入视口触发解密，离开时复位为未触发
         if (es[0].isIntersecting) {
           setStarted(true);
-          obs.disconnect();
+        } else {
+          setStarted(false);
+          setOut('');
         }
       },
       { threshold: 0.4 }
@@ -137,7 +140,9 @@ export function VariableProximity({
       {Array.from(text).map((c, i) => (
         <span
           key={i}
-          ref={(el) => (charRefs.current[i] = el)}
+          ref={(el) => {
+            charRefs.current[i] = el;
+          }}
           style={{
             display: 'inline-block',
             transition: 'color 0.2s, font-weight 0.2s',

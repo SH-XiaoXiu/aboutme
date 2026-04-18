@@ -18,7 +18,7 @@ export default function GlobalAmbient() {
   return (
     <div
       className="pointer-events-none fixed inset-0 z-0"
-      style={{ opacity: 0.3 }}
+      style={{ opacity: 0.22 }}
     >
       <InteractiveParticles mouse={mouse} />
     </div>

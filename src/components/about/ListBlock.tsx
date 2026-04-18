@@ -28,7 +28,7 @@ export default function ListBlock({ block }: { block: AboutBlock }) {
             <motion.div
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
-              viewport={{ once: true, margin: '-60px' }}
+              viewport={{ once: false, margin: '-60px' }}
               transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
               className="absolute left-[52px] md:left-[72px] top-2 bottom-2 w-px bg-gradient-to-b from-ink-200/40 via-ink-600/30 to-transparent origin-top"
             />
@@ -43,7 +43,7 @@ export default function ListBlock({ block }: { block: AboutBlock }) {
                   key={i}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
+                  viewport={{ once: false, margin: '-50px' }}
                   transition={{ duration: 0.9, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   className={`group relative grid grid-cols-[72px_1fr] md:grid-cols-[96px_1fr] gap-4 md:gap-8 items-baseline ${indentClass}`}
                 >
@@ -62,7 +62,7 @@ export default function ListBlock({ block }: { block: AboutBlock }) {
 
                   <div className="relative">
                     {/* 节点小圆点 */}
-                    <div className="absolute -left-[22px] md:-left-[34px] top-[0.9em] w-2 h-2 rounded-full bg-ink-400 group-hover:bg-ink-50 group-hover:scale-125 transition-all duration-500 ring-4 ring-[#0a0908]" />
+                    <div className="absolute -left-[22px] md:-left-[34px] top-[0.9em] w-2 h-2 rounded-full bg-ink-400 group-hover:bg-ink-50 group-hover:scale-125 transition-all duration-500 ring-4 ring-[#0e0906]" />
 
                     <p className="font-serif text-xl md:text-3xl lg:text-[2.1rem] leading-[1.35] text-ink-50 group-hover:translate-x-1 transition-transform duration-500">
                       {item}
@@ -77,7 +77,7 @@ export default function ListBlock({ block }: { block: AboutBlock }) {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 1.2, delay: 0.3 }}
               className="relative mt-20 md:mt-28 max-w-2xl ml-auto"
             >
@@ -98,7 +98,7 @@ export default function ListBlock({ block }: { block: AboutBlock }) {
           <motion.div
             initial={{ opacity: 0, scale: 1.05 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="md:col-span-4 md:sticky md:top-20"
           >

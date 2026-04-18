@@ -14,7 +14,7 @@ export default function ContradictionsBlock({ block }: { block: AboutBlock }) {
               key={i}
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
+              viewport={{ once: false, margin: '-50px' }}
               transition={{ duration: 0.8, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
               className="group grid grid-cols-[auto_1fr_auto_1fr] md:grid-cols-[auto_5fr_auto_5fr] items-baseline gap-3 md:gap-6 py-5 md:py-6"
             >
@@ -35,7 +35,7 @@ export default function ContradictionsBlock({ block }: { block: AboutBlock }) {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 1.2, delay: 0.4 }}
             className="mt-10 font-serif italic text-ink-200/70 text-base md:text-lg max-w-2xl"
           >

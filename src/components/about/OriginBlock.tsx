@@ -19,7 +19,7 @@ export default function OriginBlock({ block }: { block: AboutBlock }) {
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
+              viewport={{ once: false, margin: '-60px' }}
               transition={{ duration: 0.9, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="text-ink-200/85 leading-[1.9] text-[17px] font-light"
             >
@@ -30,7 +30,7 @@ export default function OriginBlock({ block }: { block: AboutBlock }) {
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 1, delay: 0.4 }}
               className="pt-6 font-serif italic text-2xl md:text-3xl text-ink-50"
             >
@@ -45,7 +45,7 @@ export default function OriginBlock({ block }: { block: AboutBlock }) {
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ duration: 1, delay: 0.2 }}
                 className="col-span-2"
               >
@@ -56,7 +56,7 @@ export default function OriginBlock({ block }: { block: AboutBlock }) {
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ duration: 1, delay: 0.35 }}
                 className="col-span-2 md:col-span-1 md:col-start-2 md:-mt-8"
               >
@@ -69,7 +69,7 @@ export default function OriginBlock({ block }: { block: AboutBlock }) {
                   key={img.src}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false }}
                   transition={{ duration: 1, delay: 0.5 + i * 0.1 }}
                 >
                   <Img image={img} aspect="aspect-[3/4]" />

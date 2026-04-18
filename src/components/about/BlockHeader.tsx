@@ -17,7 +17,7 @@ export default function BlockHeader({ index, label, title, subtitle }: Props) {
         <motion.div
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="w-10 h-px bg-ink-200/40 origin-left"
         />
@@ -30,7 +30,7 @@ export default function BlockHeader({ index, label, title, subtitle }: Props) {
           <motion.span
             initial={{ y: '100%' }}
             whileInView={{ y: '0%' }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: false, margin: '-80px' }}
             transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
             className="inline-block"
           >

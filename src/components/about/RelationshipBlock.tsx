@@ -20,7 +20,7 @@ export default function RelationshipBlock({ block }: { block: AboutBlock }) {
           <motion.div
             initial={{ opacity: 0, scale: 1.1 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-xs mx-auto mb-12"
           >
@@ -34,7 +34,7 @@ export default function RelationshipBlock({ block }: { block: AboutBlock }) {
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
+              viewport={{ once: false, margin: '-50px' }}
               transition={{ duration: 1, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="font-serif text-xl md:text-2xl text-ink-50 leading-relaxed"
             >

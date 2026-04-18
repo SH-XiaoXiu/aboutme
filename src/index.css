@@ -8,9 +8,12 @@
   color-scheme: light;
 }
 
-html, body, #root {
+html {
+  background: #0b0805;
+}
+body, #root {
   min-height: 100%;
-  background: #0a0908;
+  background: transparent;
   color: #f8f6f1;
   margin: 0;
   padding: 0;
@@ -38,18 +41,7 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.cursor-glow {
-  position: fixed;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(248, 246, 241, 0.06) 0%, transparent 60%);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-  filter: blur(40px);
-  transition: opacity 0.4s;
-}
+/* CursorGlow 样式已迁移至组件内联 */
 
 .vertical-rl {
   writing-mode: vertical-rl;

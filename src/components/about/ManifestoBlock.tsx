@@ -11,7 +11,7 @@ export default function ManifestoBlock({ block }: { block: AboutBlock }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
         className="pointer-events-none absolute -top-16 -left-8 md:-left-16 font-serif select-none text-ink-50/[0.04]"
         style={{ fontSize: 'clamp(18rem, 36vw, 44rem)', lineHeight: '0.7' }}
@@ -30,7 +30,7 @@ export default function ManifestoBlock({ block }: { block: AboutBlock }) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         transition={{ duration: 1.2, delay: 0.9 }}
         className="hidden md:flex absolute bottom-4 right-0 md:right-4 flex-col items-end gap-5"
       >
@@ -42,7 +42,7 @@ export default function ManifestoBlock({ block }: { block: AboutBlock }) {
             key={m}
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8, delay: 1 + i * 0.1 }}
             className="flex items-center gap-4 group"
           >
@@ -59,7 +59,7 @@ export default function ManifestoBlock({ block }: { block: AboutBlock }) {
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
           className="font-serif leading-[1.05] text-ink-50 mb-5"
           style={{ fontSize: 'clamp(2.8rem, 7vw, 6.5rem)' }}
@@ -71,7 +71,7 @@ export default function ManifestoBlock({ block }: { block: AboutBlock }) {
         <motion.div
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-5 h-px w-32 md:w-48 bg-gradient-to-r from-ink-200 to-transparent origin-left"
         />
@@ -80,7 +80,7 @@ export default function ManifestoBlock({ block }: { block: AboutBlock }) {
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="font-serif italic leading-[1.05] text-ink-200/75 md:ml-[10vw]"
           style={{ fontSize: 'clamp(2rem, 5.5vw, 5rem)' }}
@@ -92,7 +92,7 @@ export default function ManifestoBlock({ block }: { block: AboutBlock }) {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1, delay: 0.8 }}
           className="mt-20 md:mt-28 max-w-md"
         >

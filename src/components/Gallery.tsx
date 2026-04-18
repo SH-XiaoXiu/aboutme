@@ -128,6 +128,7 @@ export default function Gallery() {
           label="GALLERY"
           title="一些照片，"
           italicTitle="咋啥都挂上来。。"
+          direction="from-bottom"
         />
       </div>
 
@@ -152,11 +153,11 @@ export default function Gallery() {
             return (
               <motion.div
                 key={p.id}
-                initial={{ opacity: 0, y: 60, rotate: p.rotation * 2 }}
-                whileInView={{ opacity: 1, y: 0, rotate: p.rotation }}
-                viewport={{ once: true, margin: '-80px' }}
+                initial={{ opacity: 0, scale: 1.18, rotate: p.rotation * 2.5 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: p.rotation }}
+                viewport={{ once: false, margin: '-80px' }}
                 transition={{
-                  duration: 1.2,
+                  duration: 1.3,
                   delay: (i % 8) * 0.06,
                   ease: [0.16, 1, 0.3, 1],
                 }}
@@ -178,7 +179,7 @@ export default function Gallery() {
               >
                 {/* Polaroid frame — 高度跟随图片自然比例 */}
                 <div className="relative bg-[#ede6d1] pt-[10px] px-[10px] pb-[34px]">
-                  <div className="relative overflow-hidden bg-[#0a0908]">
+                  <div className="relative overflow-hidden bg-[#0e0906]">
                     <img
                       src={p.src}
                       alt=""

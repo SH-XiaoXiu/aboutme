@@ -10,6 +10,8 @@ import Contact from './components/Contact';
 import CursorGlow from './components/CursorGlow';
 import GlobalAmbient from './components/GlobalAmbient';
 import Interstitial from './components/Interstitial';
+import SideRail from './components/SideRail';
+import FilmBackdrop from './components/FilmBackdrop';
 
 export default function App() {
   useEffect(() => {
@@ -27,65 +29,87 @@ export default function App() {
 
   return (
     <main className="relative grain">
+      <FilmBackdrop fixed />
       <CursorGlow />
       <GlobalAmbient />
+      <SideRail />
 
       <div className="relative z-10">
-        <CinematicHero />
+        <div id="hero">
+          <CinematicHero />
+        </div>
 
         <Interstitial
           from="00"
           to="01"
           toLabel="PROLOGUE"
           quote="你好！我是小修。"
+          variant="default"
         />
 
-        <About />
+        <div id="about">
+          <About />
+        </div>
 
         <Interstitial
           from="01"
           to="02"
           toLabel="CRAFT"
           quote="接下来，是工具箱。"
+          variant="curtain"
         />
 
-        <Skills />
+        <div id="skills">
+          <Skills />
+        </div>
 
         <Interstitial
           from="02"
           to="03"
           toLabel="CHRONICLE"
           quote="接下来，是做过的事。"
+          variant="diagonal"
         />
 
-        <Experience />
+        <div id="experience">
+          <Experience />
+        </div>
 
         <Interstitial
           from="03"
           to="04"
           toLabel="SELECTED WORKS"
           quote="接下来，是做过的东西。"
+          variant="radial"
         />
 
-        <Projects />
+        <div id="projects">
+          <Projects />
+        </div>
 
         <Interstitial
           from="04"
           to="05"
           toLabel="GALLERY"
-          quote="接下来，是一些画面。"
+          quote="接下来，是一些照片。"
+          variant="glitch"
         />
 
-        <Gallery />
+        <div id="gallery">
+          <Gallery />
+        </div>
 
         <Interstitial
           from="05"
           to="06"
           toLabel="EPILOGUE"
           quote="让我们，聊点什么。"
+          variant="curtain"
         />
 
-        <Contact />
+        <div id="contact">
+          <Contact />
+        </div>
       </div>
     </main>
   );

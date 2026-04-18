@@ -18,7 +18,7 @@ const items: ContactItem[] = [
   { label: 'GitHub', value: contact.github, href: `https://${contact.github}`, kind: 'link' },
   { label: 'Gitee', value: contact.gitee, href: `https://${contact.gitee}`, kind: 'link' },
   { label: 'Website', value: contact.website, href: `https://${contact.website}`, kind: 'link' },
-  { label: 'Douyin', value: '扫码 · hover 查看', kind: 'qr', qrSrc: '/douyin-qr.jpg' },
+  { label: 'Douyin', value: '扫码 · hover 查看', kind: 'qr', qrSrc: `${import.meta.env.BASE_URL}douyin-qr.jpg` },
 ];
 
 export default function Contact() {
@@ -52,7 +52,7 @@ export default function Contact() {
             <motion.div
               initial={{ y: '100%' }}
               whileInView={{ y: '0%' }}
-              viewport={{ once: true, margin: '-100px' }}
+              viewport={{ once: false, margin: '-100px' }}
               transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
             >
               <VariableProximity text="让我们，" radius={180} />
@@ -62,7 +62,7 @@ export default function Contact() {
             <motion.div
               initial={{ y: '100%' }}
               whileInView={{ y: '0%' }}
-              viewport={{ once: true, margin: '-100px' }}
+              viewport={{ once: false, margin: '-100px' }}
               transition={{ duration: 1.1, delay: 0.15, ease: [0.76, 0, 0.24, 1] }}
             >
               <VariableProximity text="聊点什么。" radius={180} />
@@ -74,7 +74,7 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 1, delay: 0.3 }}
           >
             <p className="text-ink-200/80 font-light leading-relaxed text-lg mb-8 max-w-md">
@@ -133,11 +133,11 @@ export default function Contact() {
                 </>
               );
 
-              const baseClass = 'group relative flex items-center justify-between bg-transparent hover:bg-[#111110] px-6 py-7 transition-colors';
+              const baseClass = 'group relative flex items-center justify-between bg-transparent hover:bg-[#150f08] px-6 py-7 transition-colors';
               const motionProps = {
                 initial: { opacity: 0, x: 30 },
                 whileInView: { opacity: 1, x: 0 },
-                viewport: { once: true },
+                viewport: { once: false },
                 transition: { duration: 0.8, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
               };
 
@@ -167,7 +167,7 @@ export default function Contact() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1.5, delay: 0.8 }}
           className="mt-40 pt-8 border-t border-ink-600/30 flex items-center justify-between text-[10px] tracking-[0.4em] uppercase text-ink-400 font-mono"
         >

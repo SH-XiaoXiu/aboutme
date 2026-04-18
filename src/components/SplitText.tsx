@@ -18,7 +18,7 @@ export default function SplitText({ text, className = '', delay = 0, stagger = 0
           className="inline-block"
           initial={{ y: '100%', opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           transition={{
             duration: 0.7,
             delay: delay + i * stagger,
