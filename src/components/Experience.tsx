@@ -106,7 +106,7 @@ export default function Experience() {
                 style={{ top: 'calc(60% - 6px)', left: 0 }}
               >
                 <div className="relative w-3 h-3">
-                  <div className="absolute inset-0 bg-ink-50 rounded-full ring-4 ring-[#0e0906] z-10" />
+                  <div className="absolute inset-0 bg-ink-50 rounded-full ring-4 ring-[var(--html-bg)] z-10" />
                   <div className="absolute -inset-2 bg-ink-50/15 rounded-full blur-sm" />
                 </div>
               </div>

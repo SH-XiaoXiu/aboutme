@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import InteractiveParticles from './InteractiveParticles';
+import { useTheme } from '../contexts/ThemeContext';
 
 /** 固定在视口后方的全站粒子层。一个实例，穿越所有章节，不在章节间断裂。 */
 export default function GlobalAmbient() {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const { theme } = useTheme();
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -18,9 +20,9 @@ export default function GlobalAmbient() {
   return (
     <div
       className="pointer-events-none fixed inset-0 z-0"
-      style={{ opacity: 0.22 }}
+      style={{ opacity: theme === 'light' ? 0 : 0.22, transition: 'opacity 1.2s ease' }}
     >
-      <InteractiveParticles mouse={mouse} />
+      <InteractiveParticles mouse={mouse} theme={theme} />
     </div>
   );
 }

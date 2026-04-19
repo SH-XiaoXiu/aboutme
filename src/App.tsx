@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
+import { ThemeProvider } from './contexts/ThemeContext';
 import CinematicHero from './components/CinematicHero';
 import About from './components/About';
 import Skills from './components/Skills';
@@ -13,7 +14,7 @@ import Interstitial from './components/Interstitial';
 import SideRail from './components/SideRail';
 import FilmBackdrop from './components/FilmBackdrop';
 
-export default function App() {
+function AppInner() {
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.3,
@@ -112,5 +113,13 @@ export default function App() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppInner />
+    </ThemeProvider>
   );
 }

@@ -178,8 +178,8 @@ export default function Gallery() {
                 onClick={() => setLightboxIndex(i)}
               >
                 {/* Polaroid frame — 高度跟随图片自然比例 */}
-                <div className="relative bg-[#ede6d1] pt-[10px] px-[10px] pb-[34px]">
-                  <div className="relative overflow-hidden bg-[#0e0906]">
+                <div className="relative bg-[var(--card-bg2)] pt-[10px] px-[10px] pb-[34px]">
+                  <div className="relative overflow-hidden bg-[var(--html-bg)]">
                     <img
                       src={p.src}
                       alt=""

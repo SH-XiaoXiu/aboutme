@@ -4,21 +4,28 @@ import * as THREE from 'three';
 
 interface Props {
   mouse: { x: number; y: number };
+  theme: 'dark' | 'light';
 }
 
-/* ===================== 底层：余烬 ===================== */
-function EmberField({ mouse }: Props) {
+/* ===================== 底层：余烬 / 墨点 ===================== */
+function EmberField({ mouse, theme }: Props) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const themeTarget  = useRef(theme === 'light' ? 1 : 0);
+  const themeCurrent = useRef(theme === 'light' ? 1 : 0);
   const COUNT = 900;
+
+  useEffect(() => {
+    themeTarget.current = theme === 'light' ? 1 : 0;
+  }, [theme]);
 
   const { positions, randoms } = useMemo(() => {
     const pos = new Float32Array(COUNT * 3);
     const rnd = new Float32Array(COUNT * 3);
     for (let i = 0; i < COUNT; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 26;
+      pos[i * 3]     = (Math.random() - 0.5) * 26;
       pos[i * 3 + 1] = (Math.random() - 0.5) * 16;
       pos[i * 3 + 2] = (Math.random() - 0.5) * 5;
-      rnd[i * 3] = Math.random();
+      rnd[i * 3]     = Math.random();
       rnd[i * 3 + 1] = Math.random();
       rnd[i * 3 + 2] = Math.random();
     }
@@ -27,26 +34,33 @@ function EmberField({ mouse }: Props) {
 
   const uniforms = useMemo(
     () => ({
-      uTime: { value: 0 },
-      uMouse: { value: new THREE.Vector2(0, 0) },
-      uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+      uTime:      { value: 0 },
+      uMouse:     { value: new THREE.Vector2(0, 0) },
+      uPixelRatio:{ value: Math.min(window.devicePixelRatio, 2) },
+      uTheme:     { value: 0 },
     }),
     []
   );
 
   useFrame((state) => {
     if (!materialRef.current) return;
-    materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
+    themeCurrent.current += (themeTarget.current - themeCurrent.current) * 0.035;
+    materialRef.current.uniforms.uTime.value  = state.clock.getElapsedTime();
+    materialRef.current.uniforms.uTheme.value = themeCurrent.current;
     materialRef.current.uniforms.uMouse.value.x = THREE.MathUtils.lerp(
-      materialRef.current.uniforms.uMouse.value.x,
-      mouse.x * 10,
-      0.06
+      materialRef.current.uniforms.uMouse.value.x, mouse.x * 10, 0.06
     );
     materialRef.current.uniforms.uMouse.value.y = THREE.MathUtils.lerp(
-      materialRef.current.uniforms.uMouse.value.y,
-      mouse.y * 6,
-      0.06
+      materialRef.current.uniforms.uMouse.value.y, mouse.y * 6, 0.06
     );
+    // Switch blending mode based on theme
+    const targetBlend = themeCurrent.current > 0.5
+      ? THREE.NormalBlending
+      : THREE.AdditiveBlending;
+    if (materialRef.current.blending !== targetBlend) {
+      materialRef.current.blending = targetBlend;
+      materialRef.current.needsUpdate = true;
+    }
   });
 
   const vert = `
@@ -81,6 +95,7 @@ function EmberField({ mouse }: Props) {
 
   const frag = `
     varying float vHeat;
+    uniform float uTheme;
     void main() {
       vec2 uv = gl_PointCoord - 0.5;
       float d = length(uv);
@@ -89,13 +104,27 @@ function EmberField({ mouse }: Props) {
       float core  = smoothstep(0.18, 0.0, d);
       float outer = smoothstep(0.5, 0.08, d);
 
-      vec3 cCool = vec3(0.64, 0.54, 0.38);
-      vec3 cWarm = vec3(0.92, 0.78, 0.55);
-      vec3 cHot  = vec3(1.00, 0.90, 0.72);
-      vec3 col = mix(cCool, cWarm, core);
-      col = mix(col, cHot, vHeat);
+      // Dark: warm amber embers
+      vec3 dCool = vec3(0.64, 0.54, 0.38);
+      vec3 dWarm = vec3(0.92, 0.78, 0.55);
+      vec3 dHot  = vec3(1.00, 0.90, 0.72);
+      vec3 darkCol = mix(dCool, dWarm, core);
+      darkCol = mix(darkCol, dHot, vHeat);
 
-      float a = outer * (0.22 + vHeat * 0.55);
+      // Light: dark ink motes on paper
+      vec3 lDim  = vec3(0.38, 0.32, 0.26);
+      vec3 lMid  = vec3(0.22, 0.18, 0.14);
+      vec3 lDark = vec3(0.12, 0.10, 0.08);
+      vec3 lightCol = mix(lDim, lMid, core);
+      lightCol = mix(lightCol, lDark, vHeat);
+
+      vec3 col = mix(darkCol, lightCol, uTheme);
+
+      // Dark uses additive so alpha is high; light uses normal so alpha is lower
+      float darkA  = outer * (0.22 + vHeat * 0.55);
+      float lightA = outer * (0.10 + vHeat * 0.18);
+      float a = mix(darkA, lightA, uTheme);
+
       gl_FragColor = vec4(col, a);
     }
   `;
@@ -132,37 +161,41 @@ function EmberField({ mouse }: Props) {
 }
 
 /* ===================== 上层：星座网 ===================== */
-/**
- * 慢漂的节点 + 动态近邻连线。
- * 鼠标作为虚拟节点参与连线（鼠标附近连线更亮/更多）。
- */
-function ConstellationWeb({ mouse }: Props) {
-  const NODE_COUNT = 70;
-  const MAX_LINKS = NODE_COUNT * 6; // 每个节点最多 6 条连线
-  const LINK_THRESHOLD = 3.4;       // 世界坐标距离阈值
-  const BOUNDS = { x: 13, y: 8 };
+function ConstellationWeb({ mouse, theme }: Props) {
+  const NODE_COUNT     = 70;
+  const MAX_LINKS      = NODE_COUNT * 6;
+  const LINK_THRESHOLD = 3.4;
+  const BOUNDS         = { x: 13, y: 8 };
 
-  // 节点本地状态（位置 + 速度）
+  const themeTarget  = useRef(theme === 'light' ? 1 : 0);
+  const themeCurrent = useRef(theme === 'light' ? 1 : 0);
+
+  useEffect(() => {
+    themeTarget.current = theme === 'light' ? 1 : 0;
+  }, [theme]);
+
   const nodes = useMemo(() => {
     const arr: { x: number; y: number; vx: number; vy: number; z: number }[] = [];
     for (let i = 0; i < NODE_COUNT; i++) {
       arr.push({
-        x: (Math.random() - 0.5) * BOUNDS.x * 2,
-        y: (Math.random() - 0.5) * BOUNDS.y * 2,
+        x:  (Math.random() - 0.5) * BOUNDS.x * 2,
+        y:  (Math.random() - 0.5) * BOUNDS.y * 2,
         vx: (Math.random() - 0.5) * 0.12,
         vy: (Math.random() - 0.5) * 0.12,
-        z: (Math.random() - 0.5) * 2,
+        z:  (Math.random() - 0.5) * 2,
       });
     }
     return arr;
   }, []);
 
   const pointsRef = useRef<THREE.Points>(null);
-  const linesRef = useRef<THREE.LineSegments>(null);
+  const linesRef  = useRef<THREE.LineSegments>(null);
+  const nodeMat   = useRef<THREE.ShaderMaterial>(null);
+  const lineMat   = useRef<THREE.ShaderMaterial>(null);
 
   const nodePositions = useMemo(() => new Float32Array(NODE_COUNT * 3), []);
   const linePositions = useMemo(() => new Float32Array(MAX_LINKS * 2 * 3), []);
-  const lineAlphas = useMemo(() => new Float32Array(MAX_LINKS * 2), []);
+  const lineAlphas    = useMemo(() => new Float32Array(MAX_LINKS * 2), []);
 
   const pointGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -173,19 +206,34 @@ function ConstellationWeb({ mouse }: Props) {
   const lineGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-    g.setAttribute('aAlpha', new THREE.BufferAttribute(lineAlphas, 1));
+    g.setAttribute('aAlpha',   new THREE.BufferAttribute(lineAlphas, 1));
     return g;
   }, [linePositions, lineAlphas]);
 
   const mouseWorld = useRef(new THREE.Vector2(0, 0));
 
   useFrame((state, delta) => {
-    const dt = Math.min(delta, 1 / 30); // 保护
-    // 平滑鼠标世界坐标
-    mouseWorld.current.x = THREE.MathUtils.lerp(mouseWorld.current.x, mouse.x * 10, 0.08);
-    mouseWorld.current.y = THREE.MathUtils.lerp(mouseWorld.current.y, mouse.y * 6, 0.08);
+    const dt = Math.min(delta, 1 / 30);
+    themeCurrent.current += (themeTarget.current - themeCurrent.current) * 0.035;
+    const tc = themeCurrent.current;
 
-    // 更新节点位置（匀速 + 边界反弹）
+    if (nodeMat.current) nodeMat.current.uniforms.uTheme.value = tc;
+    if (lineMat.current) lineMat.current.uniforms.uTheme.value = tc;
+
+    // Switch blending
+    const targetBlend = tc > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
+    if (nodeMat.current && nodeMat.current.blending !== targetBlend) {
+      nodeMat.current.blending = targetBlend;
+      nodeMat.current.needsUpdate = true;
+    }
+    if (lineMat.current && lineMat.current.blending !== targetBlend) {
+      lineMat.current.blending = targetBlend;
+      lineMat.current.needsUpdate = true;
+    }
+
+    mouseWorld.current.x = THREE.MathUtils.lerp(mouseWorld.current.x, mouse.x * 10, 0.08);
+    mouseWorld.current.y = THREE.MathUtils.lerp(mouseWorld.current.y, mouse.y * 6,  0.08);
+
     for (const n of nodes) {
       n.x += n.vx * dt * 10;
       n.y += n.vy * dt * 10;
@@ -195,15 +243,13 @@ function ConstellationWeb({ mouse }: Props) {
       n.y = Math.max(-BOUNDS.y, Math.min(BOUNDS.y, n.y));
     }
 
-    // 写入 points 几何
     for (let i = 0; i < NODE_COUNT; i++) {
-      nodePositions[i * 3] = nodes[i].x;
+      nodePositions[i * 3]     = nodes[i].x;
       nodePositions[i * 3 + 1] = nodes[i].y;
       nodePositions[i * 3 + 2] = nodes[i].z;
     }
     pointGeom.attributes.position.needsUpdate = true;
 
-    // 建立连线（O(n^2)，n=70 → 2415 对，完全可接受）
     let linkIdx = 0;
     const thr2 = LINK_THRESHOLD * LINK_THRESHOLD;
     for (let i = 0; i < NODE_COUNT && linkIdx < MAX_LINKS; i++) {
@@ -217,12 +263,8 @@ function ConstellationWeb({ mouse }: Props) {
           const d = Math.sqrt(d2);
           const alpha = Math.max(0, 1 - d / LINK_THRESHOLD);
           const base = linkIdx * 2 * 3;
-          linePositions[base] = a.x;
-          linePositions[base + 1] = a.y;
-          linePositions[base + 2] = a.z;
-          linePositions[base + 3] = b.x;
-          linePositions[base + 4] = b.y;
-          linePositions[base + 5] = b.z;
+          linePositions[base]     = a.x; linePositions[base+1] = a.y; linePositions[base+2] = a.z;
+          linePositions[base+3]   = b.x; linePositions[base+4] = b.y; linePositions[base+5] = b.z;
           lineAlphas[linkIdx * 2] = alpha;
           lineAlphas[linkIdx * 2 + 1] = alpha;
           linkIdx++;
@@ -230,7 +272,6 @@ function ConstellationWeb({ mouse }: Props) {
       }
     }
 
-    // 鼠标与节点的连线（更亮、更长范围）
     const MOUSE_THR = 4.2;
     const mThr2 = MOUSE_THR * MOUSE_THR;
     for (let i = 0; i < NODE_COUNT && linkIdx < MAX_LINKS; i++) {
@@ -242,35 +283,39 @@ function ConstellationWeb({ mouse }: Props) {
         const d = Math.sqrt(d2);
         const alpha = Math.max(0, 1 - d / MOUSE_THR) * 1.4;
         const base = linkIdx * 2 * 3;
-        linePositions[base] = n.x;
-        linePositions[base + 1] = n.y;
-        linePositions[base + 2] = n.z;
-        linePositions[base + 3] = mouseWorld.current.x;
-        linePositions[base + 4] = mouseWorld.current.y;
-        linePositions[base + 5] = 0;
-        lineAlphas[linkIdx * 2] = alpha;
+        linePositions[base]   = n.x;  linePositions[base+1] = n.y;  linePositions[base+2] = n.z;
+        linePositions[base+3] = mouseWorld.current.x;
+        linePositions[base+4] = mouseWorld.current.y;
+        linePositions[base+5] = 0;
+        lineAlphas[linkIdx * 2]     = alpha;
         lineAlphas[linkIdx * 2 + 1] = Math.min(1, alpha * 1.5);
         linkIdx++;
       }
     }
 
-    // 剩余 slot 清零
     for (let k = linkIdx; k < MAX_LINKS; k++) {
       const base = k * 2 * 3;
-      linePositions[base] = linePositions[base + 1] = linePositions[base + 2] = 0;
-      linePositions[base + 3] = linePositions[base + 4] = linePositions[base + 5] = 0;
-      lineAlphas[k * 2] = 0;
-      lineAlphas[k * 2 + 1] = 0;
+      linePositions[base]=linePositions[base+1]=linePositions[base+2]=0;
+      linePositions[base+3]=linePositions[base+4]=linePositions[base+5]=0;
+      lineAlphas[k*2]=0; lineAlphas[k*2+1]=0;
     }
 
     lineGeom.attributes.position.needsUpdate = true;
-    lineGeom.attributes.aAlpha.needsUpdate = true;
+    lineGeom.attributes.aAlpha.needsUpdate   = true;
     lineGeom.setDrawRange(0, linkIdx * 2);
 
     void state;
   });
 
-  // 节点：小亮点
+  const nodeUniforms = useMemo(() => ({
+    uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+    uTheme:      { value: 0 },
+  }), []);
+
+  const lineUniforms = useMemo(() => ({
+    uTheme: { value: 0 },
+  }), []);
+
   const nodeVert = `
     uniform float uPixelRatio;
     void main() {
@@ -280,19 +325,22 @@ function ConstellationWeb({ mouse }: Props) {
     }
   `;
   const nodeFrag = `
+    uniform float uTheme;
     void main() {
       vec2 uv = gl_PointCoord - 0.5;
       float d = length(uv);
       if (d > 0.5) discard;
       float a = smoothstep(0.5, 0.0, d) * 0.6;
-      gl_FragColor = vec4(0.82, 0.68, 0.44, a);
+      // Dark: warm bronze. Light: ink-gray-blue
+      vec3 darkCol  = vec3(0.82, 0.68, 0.44);
+      vec3 lightCol = vec3(0.28, 0.30, 0.36);
+      vec3 col = mix(darkCol, lightCol, uTheme);
+      float darkA  = a;
+      float lightA = a * 0.55;
+      gl_FragColor = vec4(col, mix(darkA, lightA, uTheme));
     }
   `;
-  const nodeUniforms = useMemo(() => ({
-    uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-  }), []);
 
-  // 连线：按每端 alpha 渐变
   const lineVert = `
     attribute float aAlpha;
     varying float vA;
@@ -303,22 +351,26 @@ function ConstellationWeb({ mouse }: Props) {
   `;
   const lineFrag = `
     varying float vA;
+    uniform float uTheme;
     void main() {
       if (vA < 0.01) discard;
-      gl_FragColor = vec4(0.78, 0.64, 0.42, vA * 0.38);
+      // Dark: warm bronze. Light: gray-blue ink lines
+      vec4 darkCol  = vec4(0.78, 0.64, 0.42, vA * 0.38);
+      vec4 lightCol = vec4(0.26, 0.30, 0.38, vA * 0.22);
+      gl_FragColor  = mix(darkCol, lightCol, uTheme);
     }
   `;
 
-  // 确保 geometry 的 position attribute 在 ref 挂上时初始化
   useEffect(() => {
     if (pointsRef.current) pointsRef.current.geometry = pointGeom;
-    if (linesRef.current) linesRef.current.geometry = lineGeom;
+    if (linesRef.current)  linesRef.current.geometry  = lineGeom;
   }, [pointGeom, lineGeom]);
 
   return (
     <group>
       <points ref={pointsRef} geometry={pointGeom}>
         <shaderMaterial
+          ref={nodeMat}
           vertexShader={nodeVert}
           fragmentShader={nodeFrag}
           uniforms={nodeUniforms}
@@ -329,8 +381,10 @@ function ConstellationWeb({ mouse }: Props) {
       </points>
       <lineSegments ref={linesRef} geometry={lineGeom}>
         <shaderMaterial
+          ref={lineMat}
           vertexShader={lineVert}
           fragmentShader={lineFrag}
+          uniforms={lineUniforms}
           transparent
           depthWrite={false}
           blending={THREE.AdditiveBlending}
@@ -340,7 +394,7 @@ function ConstellationWeb({ mouse }: Props) {
   );
 }
 
-export default function InteractiveParticles({ mouse }: Props) {
+export default function InteractiveParticles({ mouse, theme }: Props) {
   return (
     <Canvas
       className="!absolute inset-0"
@@ -348,8 +402,8 @@ export default function InteractiveParticles({ mouse }: Props) {
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
     >
-      <EmberField mouse={mouse} />
-      <ConstellationWeb mouse={mouse} />
+      <EmberField mouse={mouse} theme={theme} />
+      <ConstellationWeb mouse={mouse} theme={theme} />
     </Canvas>
   );
 }

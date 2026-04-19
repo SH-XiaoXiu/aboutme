@@ -61,8 +61,8 @@ export default function Skills() {
               </span>
             ))}
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-[#0e0906]/80 to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[#0e0906]/80 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-[var(--html-bg)]/80 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[var(--html-bg)]/80 to-transparent z-10" />
         </div>
       </motion.div>
 
@@ -83,7 +83,7 @@ export default function Skills() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: false, margin: '-50px' }}
               transition={{ duration: 0.6, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-              className="relative bg-[#0e0906]/70 backdrop-blur-sm p-8 md:p-10 hover:bg-[#150f08]/80 transition-colors group overflow-hidden"
+              className="relative bg-[var(--card-bg)]/70 backdrop-blur-sm p-8 md:p-10 hover:bg-[var(--card-bg2)]/80 transition-colors group overflow-hidden"
             >
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-ink-50/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 

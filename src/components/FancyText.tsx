@@ -165,7 +165,7 @@ export function ShinyText({ children, className = '' }: { children: ReactNode; c
       className={`inline-block bg-clip-text text-transparent ${className}`}
       style={{
         backgroundImage:
-          'linear-gradient(110deg, rgba(232,226,210,0.55) 40%, rgba(248,246,241,1) 50%, rgba(232,226,210,0.55) 60%)',
+          'linear-gradient(110deg, color-mix(in srgb, var(--ink-200) 60%, transparent) 40%, var(--ink-50) 50%, color-mix(in srgb, var(--ink-200) 60%, transparent) 60%)',
         backgroundSize: '300% 100%',
         animation: 'shine 6s ease-in-out infinite',
       }}

@@ -113,7 +113,7 @@ export default function CinematicHero() {
               style={{
                 fontSize: 'clamp(5rem, 20vw, 20rem)',
                 letterSpacing: '-0.04em',
-                filter: 'drop-shadow(0 0 40px rgba(248,246,241,0.1))',
+                filter: 'drop-shadow(0 0 40px color-mix(in srgb, var(--ink-50) 10%, transparent))',
                 fontWeight: 400,
               }}
             >
@@ -231,18 +231,17 @@ export default function CinematicHero() {
 
                   {/* BACK — 照片背面（信息卡） */}
                   <div
-                    className="absolute inset-0 text-[#2a1f12] p-8 md:p-10 flex flex-col"
+                    className="absolute inset-0 p-8 md:p-10 flex flex-col"
                     style={{
                       backfaceVisibility: 'hidden',
                       WebkitBackfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
-                      background:
-                        'linear-gradient(135deg, #f0e5cf 0%, #e5d9bf 50%, #dccfb0 100%)',
-                      boxShadow:
-                        'inset 0 0 60px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(0,0,0,0.1)',
+                      background: 'var(--card-bg)',
+                      boxShadow: 'inset 0 0 0 1px rgb(var(--ink-600-rgb) / 0.15)',
+                      color: 'var(--ink-50)',
                     }}
                   >
-                    <div className="flex items-center justify-between font-mono text-[9px] tracking-[0.4em] uppercase text-[#6b5a3d]">
+                    <div className="flex items-center justify-between font-mono text-[9px] tracking-[0.4em] uppercase text-ink-400">
                       <span>photo · verso</span>
                       <span>№ 001</span>
                     </div>
@@ -256,10 +255,10 @@ export default function CinematicHero() {
                         { k: 'BASED', v: basic.location },
                       ].map((row) => (
                         <div key={row.k} className="contents">
-                          <dt className="text-[9px] tracking-[0.35em] text-[#8a7550] pt-[5px]">
+                          <dt className="text-[9px] tracking-[0.35em] text-ink-400 pt-[5px]">
                             {row.k}
                           </dt>
-                          <dd className="font-serif text-base md:text-lg text-[#2a1f12] leading-snug border-b border-[#2a1f12]/15 pb-1.5">
+                          <dd className="font-serif text-base md:text-lg text-ink-50 leading-snug border-b border-ink-600/30 pb-1.5">
                             {row.v}
                           </dd>
                         </div>
@@ -267,16 +266,16 @@ export default function CinematicHero() {
                     </dl>
 
                     <div className="mt-auto pt-6 flex items-end justify-between">
-                      <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#6b5a3d]">
+                      <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-ink-400">
                         filed · Shenzhen
                       </div>
-                      <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#6b5a3d]">
+                      <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-ink-400">
                         MMXXVI
                       </div>
                     </div>
 
                     {/* 邮戳 */}
-                    <div className="absolute top-3 right-3 w-12 h-12 border border-dashed border-[#2a1f12]/25 rounded-full flex items-center justify-center font-mono text-[8px] tracking-widest text-[#6b5a3d]/80 rotate-[-8deg]">
+                    <div className="absolute top-3 right-3 w-12 h-12 border border-dashed border-ink-600/40 rounded-full flex items-center justify-center font-mono text-[8px] tracking-widest text-ink-400/80 rotate-[-8deg]">
                       ✦
                     </div>
                   </div>

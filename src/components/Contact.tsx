@@ -106,7 +106,7 @@ export default function Contact() {
                     <div
                       className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-4 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out z-30"
                     >
-                      <div className="relative bg-[#ede6d1] p-3 shadow-[0_20px_50px_rgba(0,0,0,0.6)]" style={{ width: '13rem' }}>
+                      <div className="relative bg-[var(--card-bg)] border border-ink-600/30 p-3 shadow-[0_20px_50px_rgba(0,0,0,0.4)]" style={{ width: '13rem' }}>
                         <img
                           src={l.qrSrc}
                           alt="Douyin QR"
@@ -118,7 +118,7 @@ export default function Contact() {
                           }}
                         />
                         <div
-                          className="hidden w-full aspect-square items-center justify-center text-[10px] tracking-[0.3em] uppercase text-ink-600 bg-[#f4efd9] font-mono text-center px-2 leading-relaxed"
+                          className="hidden w-full aspect-square items-center justify-center text-[10px] tracking-[0.3em] uppercase text-ink-400 bg-[var(--card-bg2)] font-mono text-center px-2 leading-relaxed"
                         >
                           — 把二维码<br />放到 public/douyin-qr.png —
                         </div>
@@ -126,14 +126,14 @@ export default function Contact() {
                           DOUYIN
                         </div>
                         {/* pointer */}
-                        <div className="absolute right-[-6px] top-1/2 -translate-y-1/2 w-3 h-3 bg-[#ede6d1] rotate-45" />
+                        <div className="absolute right-[-6px] top-1/2 -translate-y-1/2 w-3 h-3 bg-[var(--card-bg)] rotate-45" style={{ boxShadow: '1px -1px 0 0 rgb(var(--ink-600-rgb) / 0.3)' }} />
                       </div>
                     </div>
                   )}
                 </>
               );
 
-              const baseClass = 'group relative flex items-center justify-between bg-transparent hover:bg-[#150f08] px-6 py-7 transition-colors';
+              const baseClass = 'group relative flex items-center justify-between bg-transparent hover:bg-[var(--card-bg2)] px-6 py-7 transition-colors';
               const motionProps = {
                 initial: { opacity: 0, x: 30 },
                 whileInView: { opacity: 1, x: 0 },

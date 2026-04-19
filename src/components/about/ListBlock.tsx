@@ -62,7 +62,7 @@ export default function ListBlock({ block }: { block: AboutBlock }) {
 
                   <div className="relative">
                     {/* 节点小圆点 */}
-                    <div className="absolute -left-[22px] md:-left-[34px] top-[0.9em] w-2 h-2 rounded-full bg-ink-400 group-hover:bg-ink-50 group-hover:scale-125 transition-all duration-500 ring-4 ring-[#0e0906]" />
+                    <div className="absolute -left-[22px] md:-left-[34px] top-[0.9em] w-2 h-2 rounded-full bg-ink-400 group-hover:bg-ink-50 group-hover:scale-125 transition-all duration-500 ring-4 ring-[var(--html-bg)]" />
 
                     <p className="font-serif text-xl md:text-3xl lg:text-[2.1rem] leading-[1.35] text-ink-50 group-hover:translate-x-1 transition-transform duration-500">
                       {item}

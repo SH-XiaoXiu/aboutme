@@ -4,19 +4,130 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Theme tokens ────────────────────────────────────────────────────────────
+   ink-*-rgb: space-separated R G B so Tailwind opacity modifiers work:
+     text-ink-50/[0.06] → color: rgb(var(--ink-50-rgb) / 0.06)  ✓
+   ─────────────────────────────────────────────────────────────────────────── */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
+
+  /* Dark 胶片铜墨 */
+  --ink-50-rgb:  248 246 241;
+  --ink-100-rgb: 239 234 224;
+  --ink-200-rgb: 221 213 197;
+  --ink-400-rgb: 138 132 120;
+  --ink-600-rgb: 74  70  63;
+  --ink-800-rgb: 34  32  24;
+  --ink-900-rgb: 20  19  14;
+  --accent-rgb:   125 101 64;
+  --accent-l-rgb: 160 129 96;
+
+  /* Direct color values for use in inline styles and non-Tailwind contexts */
+  --ink-50:  rgb(248 246 241);
+  --ink-100: rgb(239 234 224);
+  --ink-200: rgb(221 213 197);
+  --ink-400: rgb(138 132 120);
+  --ink-600: rgb(74  70  63);
+  --ink-800: rgb(34  32  24);
+  --ink-900: rgb(20  19  14);
+  --accent:  rgb(125 101 64);
+  --accent-l:rgb(160 129 96);
+
+  --cur-halo-opacity: 1;
+
+  --html-bg:  #0b0805;
+  --body-fg:  #f8f6f1;
+  --card-bg:  #0e0906;
+  --card-bg2: #150f08;
+
+  --grain-blend:   screen;
+  --grain-opacity: 0.08;
+
+  --sel-bg: #f8f6f1;
+  --sel-fg: #14130e;
+
+  --scan-line:     rgba(221,213,197,0.90);
+  --scan-line-mid: rgba(221,213,197,0.45);
+
+  --cur-inner:      rgba(248,246,241,0.95);
+  --cur-border:     rgba(248,246,241,0.90);
+  --cur-blend:      difference;
+  --cur-halo-stop1: rgba(160,129,96,0.18);
+  --cur-halo-stop2: rgba(125,101,64,0.06);
+  --cur-halo-blend: screen;
 }
 
-html {
-  background: #0b0805;
+/* ── Light: Apple-inspired 净白 ─────────────────────────────────────────── */
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Text hierarchy: Apple #1d1d1f → #6e6e73 → #98989d → separators */
+  --ink-50-rgb:  29  29  31;   /* #1d1d1f  primary text */
+  --ink-100-rgb: 60  60  67;
+  --ink-200-rgb: 110 110 115;  /* #6e6e73  secondary text */
+  --ink-400-rgb: 152 152 157;  /* #98989d  tertiary */
+  --ink-600-rgb: 209 209 214;  /* #d1d1d6  separator */
+  --ink-800-rgb: 229 229 234;  /* #e5e5ea  grouped bg */
+  --ink-900-rgb: 245 245 247;  /* #f5f5f7  system bg */
+
+  --accent-rgb:   0  113 227;  /* #0071e3  Apple blue */
+  --accent-l-rgb: 0  125 250;
+
+  /* Direct color values */
+  --ink-50:  rgb(29  29  31);
+  --ink-100: rgb(60  60  67);
+  --ink-200: rgb(110 110 115);
+  --ink-400: rgb(152 152 157);
+  --ink-600: rgb(209 209 214);
+  --ink-800: rgb(229 229 234);
+  --ink-900: rgb(245 245 247);
+  --accent:  rgb(0   113 227);
+  --accent-l:rgb(0   125 250);
+
+  --cur-halo-opacity: 0;
+
+  --html-bg:  #f5f5f7;
+  --body-fg:  #1d1d1f;
+  --card-bg:  #ffffff;
+  --card-bg2: #f5f5f7;
+
+  --grain-blend:   screen;
+  --grain-opacity: 0;          /* No film grain in clean Apple mode */
+
+  --sel-bg: #1d1d1f;
+  --sel-fg: #f5f5f7;
+
+  --scan-line:     rgba(29,29,31,0.55);
+  --scan-line-mid: rgba(29,29,31,0.20);
+
+  --cur-inner:      rgba(29,29,31,0.90);
+  --cur-border:     rgba(29,29,31,0.70);
+  --cur-blend:      normal;
+  --cur-halo-stop1: rgba(0,113,227,0.12);
+  --cur-halo-stop2: rgba(0,113,227,0.03);
+  --cur-halo-blend: multiply;
 }
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+html {
+  background: var(--html-bg);
+  transition: background 0.6s ease;
+}
+
 body, #root {
   min-height: 100%;
   background: transparent;
-  color: #f8f6f1;
+  color: var(--body-fg);
   margin: 0;
   padding: 0;
+  transition: color 0.6s ease;
+}
+
+/* Belt-and-suspenders: force dark text on all sections in light mode */
+[data-theme="light"] section,
+[data-theme="light"] main,
+[data-theme="light"] nav {
+  color: var(--body-fg);
 }
 
 body {
@@ -26,23 +137,25 @@ body {
 }
 
 ::selection {
-  background: #f8f6f1;
-  color: #14130e;
+  background: var(--sel-bg);
+  color: var(--sel-fg);
 }
 
+/* ─── Film grain ──────────────────────────────────────────────────────────── */
 .grain::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.08;
-  mix-blend-mode: screen;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  transition: opacity 0.6s ease;
 }
 
-/* CursorGlow 样式已迁移至组件内联 */
-
+/* ─── Utilities ───────────────────────────────────────────────────────────── */
 .vertical-rl {
   writing-mode: vertical-rl;
   letter-spacing: 0.3em;
@@ -71,7 +184,7 @@ body {
 
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
 }
 .marquee-track {
   animation: marquee 50s linear infinite;
@@ -79,6 +192,6 @@ body {
 
 @keyframes float-slow {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(1deg); }
+  50%       { transform: translateY(-20px) rotate(1deg); }
 }
 .float-slow { animation: float-slow 8s ease-in-out infinite; }

@@ -1,5 +1,6 @@
 import { motion, useMotionTemplate, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { useRef } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import { DecryptedText } from './FancyText';
 
 export type InterstitialVariant = 'default' | 'curtain' | 'diagonal' | 'radial' | 'glitch';
@@ -18,17 +19,19 @@ interface VariantProps {
   to: string;
   toLabel: string;
   quote?: string;
+  theme?: 'dark' | 'light';
 }
 
 /** 章节之间的过场：一屏高度的静默插片，像胶片过片头。 */
 export default function Interstitial({ from, to, toLabel, quote, variant = 'default' }: Props) {
   const ref = useRef<HTMLElement>(null);
+  const { theme } = useTheme();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
   });
 
-  const props: VariantProps = { scrollYProgress, from, to, toLabel, quote };
+  const props: VariantProps = { scrollYProgress, from, to, toLabel, quote, theme };
 
   return (
     <section ref={ref} className="relative h-[80vh] flex items-center justify-center overflow-hidden">
@@ -102,7 +105,7 @@ function CurtainVariant({ scrollYProgress, from, to, toLabel, quote }: VariantPr
       <motion.div
         style={{
           x: scanX,
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(221,213,197,0.5) 15%, rgba(221,213,197,0.9) 50%, rgba(221,213,197,0.5) 85%, transparent 100%)',
+          background: 'linear-gradient(to bottom, transparent 0%, var(--scan-line-mid) 15%, var(--scan-line) 50%, var(--scan-line-mid) 85%, transparent 100%)',
         }}
         className="absolute left-0 top-0 bottom-0 w-px pointer-events-none"
       />
@@ -196,7 +199,7 @@ function DiagonalVariant({ scrollYProgress, from, to, toLabel, quote }: VariantP
 // ─── Radial ───────────────────────────────────────────────────────────────────
 // 镜头光圈从中心扩散，快门叶片辐射线
 
-function RadialVariant({ scrollYProgress, from, to, toLabel, quote }: VariantProps) {
+function RadialVariant({ scrollYProgress, from, to, toLabel, quote, theme }: VariantProps) {
   const circleR      = useTransform(scrollYProgress, [0.2, 0.5, 0.8], ['0%', '75%', '0%']);
   const circleClip   = useMotionTemplate`circle(${circleR} at 50% 50%)`;
   const glowOpacity  = useTransform(scrollYProgress, [0.2, 0.35, 0.65, 0.8], [0, 1, 1, 0]);
@@ -221,7 +224,11 @@ function RadialVariant({ scrollYProgress, from, to, toLabel, quote }: VariantPro
       >
         <div
           className="absolute inset-0"
-          style={{ background: 'radial-gradient(circle at 50% 50%, rgba(160,129,96,0.35) 0%, rgba(140,110,80,0.18) 40%, transparent 70%)' }}
+          style={{
+            background: theme === 'light'
+              ? 'radial-gradient(circle at 50% 50%, rgba(0,113,227,0.08) 0%, rgba(0,113,227,0.04) 40%, transparent 70%)'
+              : 'radial-gradient(circle at 50% 50%, rgba(160,129,96,0.35) 0%, rgba(140,110,80,0.18) 40%, transparent 70%)'
+          }}
         />
       </motion.div>
 
@@ -237,7 +244,7 @@ function RadialVariant({ scrollYProgress, from, to, toLabel, quote }: VariantPro
               x1="50" y1="50"
               x2={50 + 60 * Math.cos((i * Math.PI) / 4)}
               y2={50 + 60 * Math.sin((i * Math.PI) / 4)}
-              stroke="rgba(221,213,197,0.25)"
+              stroke={theme === 'light' ? 'rgba(29,29,31,0.12)' : 'rgba(221,213,197,0.25)'}
               strokeWidth="0.3"
               vectorEffect="non-scaling-stroke"
             />
@@ -322,7 +329,7 @@ function GlitchVariant({ scrollYProgress, from, to, toLabel, quote }: VariantPro
             style={{
               scaleX: lineScale,
               opacity: lineOpacity,
-              background: 'linear-gradient(to right, transparent, rgba(221,213,197,0.7) 30%, rgba(221,213,197,1) 50%, rgba(221,213,197,0.7) 70%, transparent)',
+              background: 'linear-gradient(to right, transparent, var(--scan-line-mid) 30%, var(--scan-line) 50%, var(--scan-line-mid) 70%, transparent)',
             }}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-px origin-center"
           />

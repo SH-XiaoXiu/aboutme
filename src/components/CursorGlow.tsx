@@ -1,43 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * 双层光标：
- * - 内层：小号实点（即时跟手），用 mix-blend-difference 与深底形成反色
- * - 外层：柔和光晕（惯性滞后 0.12，暖青铜调）
- * 链接/按钮上悬停时内层放大 + 外层收缩（聚焦效果）
+ * 双层光标 — 颜色完全由 CSS 变量驱动，主题切换时平滑过渡。
+ * 暗色: 米白 difference 混合 + 铜晕 screen
+ * 亮色: 深墨 normal 混合 + 水墨青晕 multiply
  */
 export default function CursorGlow() {
   const innerRef = useRef<HTMLDivElement>(null);
-  const haloRef = useRef<HTMLDivElement>(null);
-  const [hover, setHover] = useState(false);
+  const haloRef  = useRef<HTMLDivElement>(null);
+  const [hover, setHover]   = useState(false);
   const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
     const inner = innerRef.current;
-    const halo = haloRef.current;
+    const halo  = haloRef.current;
     if (!inner || !halo) return;
 
     let raf = 0;
-    let tx = window.innerWidth / 2;
-    let ty = window.innerHeight / 2;
-    // 内层几乎实时，外层滞后
-    let ix = tx, iy = ty;
-    let hx = tx, hy = ty;
+    let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
+    let ix = tx, iy = ty, hx = tx, hy = ty;
 
-    const onMove = (e: MouseEvent) => {
-      tx = e.clientX;
-      ty = e.clientY;
-      setHidden(false);
-    };
-
+    const onMove  = (e: MouseEvent) => { tx = e.clientX; ty = e.clientY; setHidden(false); };
     const onLeave = () => setHidden(true);
-
-    // 判定指针是否在可交互元素上
-    const onOver = (e: MouseEvent) => {
+    const onOver  = (e: MouseEvent) => {
       const t = e.target as HTMLElement | null;
-      if (!t) return;
-      const interactive = t.closest('a, button, [role="button"], label, input, textarea, select');
-      setHover(!!interactive);
+      setHover(!!t?.closest('a, button, [role="button"], label, input, textarea, select'));
     };
 
     const tick = () => {
@@ -46,7 +33,7 @@ export default function CursorGlow() {
       hx += (tx - hx) * 0.12;
       hy += (ty - hy) * 0.12;
       inner.style.transform = `translate(${ix}px, ${iy}px) translate(-50%, -50%)`;
-      halo.style.transform = `translate(${hx}px, ${hy}px) translate(-50%, -50%)`;
+      halo.style.transform  = `translate(${hx}px, ${hy}px) translate(-50%, -50%)`;
       raf = requestAnimationFrame(tick);
     };
 
@@ -64,22 +51,21 @@ export default function CursorGlow() {
 
   return (
     <>
-      {/* 外层暖铜光晕 */}
+      {/* 外层光晕 — CSS vars handle dark/light colors */}
       <div
         ref={haloRef}
         aria-hidden
         className="hidden md:block pointer-events-none fixed top-0 left-0 z-[60]"
         style={{
-          width: hover ? 90 : 180,
+          width:  hover ? 90 : 180,
           height: hover ? 90 : 180,
           borderRadius: '50%',
-          background:
-            'radial-gradient(circle, rgba(160, 129, 96, 0.18) 0%, rgba(125, 101, 64, 0.06) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--cur-halo-stop1) 0%, var(--cur-halo-stop2) 40%, transparent 70%)',
           filter: 'blur(14px)',
-          mixBlendMode: 'screen',
-          opacity: hidden ? 0 : 1,
+          mixBlendMode: 'var(--cur-halo-blend)' as React.CSSProperties['mixBlendMode'],
+          opacity: hidden ? 0 : 'var(--cur-halo-opacity)' as unknown as number,
           transition:
-            'width 0.45s cubic-bezier(0.16,1,0.3,1), height 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.3s',
+            'width 0.45s cubic-bezier(0.16,1,0.3,1), height 0.45s cubic-bezier(0.16,1,0.3,1), opacity 0.6s',
         }}
       />
       {/* 内层实点 */}
@@ -88,15 +74,15 @@ export default function CursorGlow() {
         aria-hidden
         className="hidden md:block pointer-events-none fixed top-0 left-0 z-[61]"
         style={{
-          width: hover ? 26 : 8,
+          width:  hover ? 26 : 8,
           height: hover ? 26 : 8,
           borderRadius: '50%',
-          border: hover ? '1px solid rgba(248,246,241,0.9)' : 'none',
-          background: hover ? 'transparent' : 'rgba(248,246,241,0.95)',
-          mixBlendMode: 'difference',
+          border:     hover ? '1px solid var(--cur-border)' : 'none',
+          background: hover ? 'transparent' : 'var(--cur-inner)',
+          mixBlendMode: 'var(--cur-blend)' as React.CSSProperties['mixBlendMode'],
           opacity: hidden ? 0 : 1,
           transition:
-            'width 0.35s cubic-bezier(0.16,1,0.3,1), height 0.35s cubic-bezier(0.16,1,0.3,1), background 0.3s, border 0.3s, opacity 0.3s',
+            'width 0.35s cubic-bezier(0.16,1,0.3,1), height 0.35s cubic-bezier(0.16,1,0.3,1), background 0.6s, border 0.6s, opacity 0.3s',
         }}
       />
     </>

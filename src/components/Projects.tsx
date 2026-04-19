@@ -73,7 +73,7 @@ export default function Projects() {
               }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               style={{ flexBasis: 0, flexShrink: 1, minWidth: 0 }}
-              className="relative overflow-hidden bg-[#140f08]/55 backdrop-blur border border-ink-600/30 rounded-sm cursor-pointer group hover:border-ink-200/40 transition-colors"
+              className="relative overflow-hidden bg-[var(--card-bg)]/55 backdrop-blur border border-ink-600/30 rounded-sm cursor-pointer group hover:border-ink-200/40 transition-colors"
             >
               {/* 底色叠一层暖金渐变制造层次 */}
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-ink-50/[0.04] via-transparent to-ink-50/[0.02]" />

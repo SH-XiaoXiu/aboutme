@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 interface Section {
   id: string;
@@ -7,18 +8,19 @@ interface Section {
 }
 
 const SECTIONS: Section[] = [
-  { id: 'hero', label: 'INTRO', index: '00' },
-  { id: 'about', label: 'PROLOGUE', index: '01' },
-  { id: 'skills', label: 'CRAFT', index: '02' },
-  { id: 'experience', label: 'CHRONICLE', index: '03' },
-  { id: 'projects', label: 'WORKS', index: '04' },
-  { id: 'gallery', label: 'GALLERY', index: '05' },
-  { id: 'contact', label: 'EPILOGUE', index: '06' },
+  { id: 'hero',       label: 'INTRO',    index: '00' },
+  { id: 'about',      label: 'PROLOGUE', index: '01' },
+  { id: 'skills',     label: 'CRAFT',    index: '02' },
+  { id: 'experience', label: 'CHRONICLE',index: '03' },
+  { id: 'projects',   label: 'WORKS',    index: '04' },
+  { id: 'gallery',    label: 'GALLERY',  index: '05' },
+  { id: 'contact',    label: 'EPILOGUE', index: '06' },
 ];
 
 /**
  * 侧边纵向导航轨。固定在视口右侧。
  * 每节一个细刻度 + 编号，hover 显示完整章节名。当前章节刻度变粗变亮。
+ * 底部有主题切换按钮。
  */
 export default function SideRail() {
   const [active, setActive] = useState(0);
@@ -39,10 +41,7 @@ export default function SideRail() {
           }
         });
       },
-      {
-        rootMargin: '-40% 0px -40% 0px',
-        threshold: 0,
-      }
+      { rootMargin: '-40% 0px -40% 0px', threshold: 0 }
     );
 
     sections.forEach((s) => observer.observe(s));
@@ -62,6 +61,7 @@ export default function SideRail() {
       <div className="font-mono text-[9px] tracking-[0.5em] uppercase text-ink-400/60 pb-1">
         —— chapter
       </div>
+
       {SECTIONS.map((s, i) => {
         const isActive = i === active;
         return (
@@ -97,6 +97,11 @@ export default function SideRail() {
           </button>
         );
       })}
+
+      {/* Theme toggle at bottom of rail */}
+      <div className="pointer-events-auto mt-3 flex justify-end">
+        <ThemeToggle />
+      </div>
     </nav>
   );
 }
