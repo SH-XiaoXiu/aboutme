@@ -1,7 +1,7 @@
 import type { AboutBlock } from '../../data/resume';
 import ManifestoBlock from './ManifestoBlock';
 import OriginBlock from './OriginBlock';
-import ContradictionsBlock from './ContradictionsBlock';
+import HabitsBlock from './HabitsBlock';
 import RelationshipBlock from './RelationshipBlock';
 import ListBlock from './ListBlock';
 
@@ -11,8 +11,8 @@ export default function BlockRouter({ block }: { block: AboutBlock }) {
       return <ManifestoBlock block={block} />;
     case 'origin':
       return <OriginBlock block={block} />;
-    case 'contradictions':
-      return <ContradictionsBlock block={block} />;
+    case 'habits':
+      return <HabitsBlock block={block} />;
     case 'relationship':
       return <RelationshipBlock block={block} />;
     case 'now':

@@ -1,46 +1,48 @@
 import { motion } from 'framer-motion';
 import type { AboutBlock } from '../../data/resume';
 import { getAboutImages } from '../../utils/aboutImages';
+import BlockHeader from './BlockHeader';
 import Img from './Img';
 
 export default function RelationshipBlock({ block }: { block: AboutBlock }) {
   const { images } = getAboutImages(block.imageDir);
 
   return (
-    <div className="relative py-24 md:py-40">
-      <div className="max-w-3xl mx-auto text-center">
-        <div className="font-mono text-[10px] tracking-[0.4em] uppercase text-ink-400 mb-6">
-          {block.index} · {block.label}
-        </div>
-        <div className="font-serif italic text-ink-400 text-xl md:text-2xl mb-10">
-          {block.subtitle}
-        </div>
+    <div className="relative py-24 md:py-36">
+      <div className="max-w-4xl">
+        <BlockHeader index={block.index} label={block.label} title={block.title} subtitle={block.subtitle} />
 
-        {images.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 1.1 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-xs mx-auto mb-12"
-          >
-            <Img image={images[0]} aspect="aspect-square" />
-          </motion.div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
+          <div className={images.length > 0 ? 'md:col-span-7' : 'md:col-span-9'}>
+            <div className="space-y-5">
+              {block.paragraphs?.map((p, i) => (
+                <motion.p
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, margin: '-50px' }}
+                  transition={{ duration: 1, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  className={`font-serif leading-[1.45] text-ink-50 ${
+                    i === 0 ? 'text-3xl md:text-[3.2rem]' : 'text-xl md:text-2xl text-ink-200/82'
+                  }`}
+                >
+                  {p}
+                </motion.p>
+              ))}
+            </div>
+          </div>
 
-        <div className="space-y-6">
-          {block.paragraphs?.map((p, i) => (
-            <motion.p
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: '-50px' }}
-              transition={{ duration: 1, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="font-serif text-xl md:text-2xl text-ink-50 leading-relaxed"
+          {images.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 1.04 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: false }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-span-5 md:max-w-sm md:ml-auto"
             >
-              {p}
-            </motion.p>
-          ))}
+              <Img image={images[0]} aspect="aspect-[4/5]" />
+            </motion.div>
+          )}
         </div>
       </div>
     </div>

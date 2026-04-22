@@ -6,7 +6,7 @@
 
 - `01_manifesto/` — 开场，0-1 张（无图也优雅）
 - `02_origin/` — 起源，2 张：老电脑/服务器、Minecraft 截图
-- `03_contradictions/` — 矛盾，0 张（纯文字最佳），若想加 1 张抽象图也行
+- `03_habits/` — 日常习惯，0-1 张（纯文字最佳；若放图，建议桌面/海边/咖啡这类生活切片）
 - `04_daily/` — 日常 bento：desk.jpg, keyboard.jpg, mouse.jpg, coffee.jpg, sea.jpg, focus.jpg, sleep.jpg（文件名自由，但与 bentoItems.key 同名会自动关联）
 - `05_relationship/` — 关于他，0-1 张
 - `06_now/` — 在做，0-1 张（抽象最好）
