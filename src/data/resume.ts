@@ -253,8 +253,8 @@ export const aboutBlocks: AboutBlock[] = [
         subtitle: '没什么用，但很像我。',
         listItems: [
             '咖啡基本是刚需，不然人会一直卡在开机界面。',
-            '鼠标换来换去，最后还是会买回 G502。',
-            '我很多 bug，不是在工位上解决的，是在厕所里想到办法的。',
+            '说话尖锐刻薄',
+            '很多 bug，不是在工位上解决的，是在厕所里想到办法的。',
         ],
         closer: '差不多就这些。',
         imageDir: '07_signature',
